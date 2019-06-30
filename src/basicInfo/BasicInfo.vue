@@ -73,12 +73,14 @@ export default {
       }
     }
     var validatePass2 = (rule, value, callback) => {
+      this.judge = false
       if (value === '') {
         callback(new Error('请再次输入密码'))
       } else if (value !== this.ruleForm.pass) {
         callback(new Error('两次输入密码不一致!'))
       } else {
         callback()
+        this.judge = true
       }
     }
     return {
@@ -88,12 +90,13 @@ export default {
       },
       rules: {
         pass: [
-          { validator: validatePass, trigger: 'blur' }
+          { required: true, validator: validatePass, trigger: 'blur' }
         ],
         checkPass: [
-          { validator: validatePass2, trigger: 'blur' }
+          { required: true, validator: validatePass2, trigger: 'blur' }
         ]
       },
+      judge: false,
       Index: 'a',
       phone: '',
       dialogTableVisible: false,
@@ -118,25 +121,27 @@ export default {
       })
     },
     submitForm (ruleForm) {
-      let password = ruleForm.pass
-      let updatetime = this.getTime()
-      let phone = sessionStorage.getItem('userName')
-      this.$axios.put('/PersonalData/changePassword' +
-        '?phone=' +
-        phone +
-        '&password=' +
-        password +
-        '&updatetime=' +
-        updatetime
-      ).then(res => {
-        this.$message({
-          message: '修改成功',
-          type: 'success'
+      if (this.judge === true) {
+        let password = ruleForm.pass
+        let updatetime = this.getTime()
+        let phone = sessionStorage.getItem('userName')
+        this.$axios.put('/PersonalData/changePassword' +
+          '?phone=' +
+          phone +
+          '&password=' +
+          password +
+          '&updatetime=' +
+          updatetime
+        ).then(res => {
+          this.$message({
+            message: '修改成功',
+            type: 'success'
+          })
+          this.resetForm('ruleForm')
+          this.dialogTableVisible = false
+          this.getPersonalData()
         })
-        this.resetForm('ruleForm')
-        this.dialogTableVisible = false
-        this.getPersonalData()
-      })
+      }
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()

@@ -24,7 +24,15 @@
           <div v-show="Index === 'a'" style="margin-left: 160px;">
             <el-form :inline="true">
               <el-form-item label="日期：" >
-                <el-input style="width: 180px" v-model="personalData.date" clearable placeholder="请输入" />
+                <div class="block">
+                  <el-date-picker
+                    v-model="personalData.date"
+                    type="date"
+                    placeholder="选择日期"
+                    format="yyyy 年 MM 月 dd 日"
+                    value-format="yyyy-MM-dd">
+                  </el-date-picker>
+                </div>
               </el-form-item>
               <el-form-item label="通关时间：" >
                 <el-input style="width: 180px" v-model="personalData.time" clearable placeholder="请输入" />
@@ -74,7 +82,15 @@
           <div v-show="Index === 'b'" style="margin-left: 160px">
             <el-form :inline="true">
               <el-form-item label="日期：" >
-                <el-input style="width: 180px" v-model="allData.date" clearable placeholder="请输入" />
+                <div class="block">
+                  <el-date-picker
+                    v-model="allData.date"
+                    type="date"
+                    placeholder="选择日期"
+                    format="yyyy 年 MM 月 dd 日"
+                    value-format="yyyy-MM-dd">
+                  </el-date-picker>
+                </div>
               </el-form-item>
               <el-form-item label="通关时间：" >
                 <el-input style="width: 180px" v-model="allData.time" clearable placeholder="请输入" />
@@ -134,6 +150,10 @@ export default {
         time: '',
         userName: '',
         value: ''
+      },
+      deleteData: {
+        createtime: '',
+        phone: ''
       },
       options: [{
         value: '选项1',
@@ -195,17 +215,17 @@ export default {
     },
     delPersonal (value) {
       this.dialogTableVisible = true
-      value = this.resolvingDate(value)
+      this.deleteData.createtime = value
+      this.deleteData.phone = sessionStorage.getItem('userName')
+      console.log(this.deleteData)
     },
     // 删除个人成绩
     delPersonalData (value) {
-      value = this.resolvingDate(value)
-      this.phone = sessionStorage.getItem('userName')
       this.$axios.put('/GradeRanking/delPersonalData' +
         '?createtime=' +
-        value +
+        this.deleteData.createtime +
         '&phone=' +
-        this.phone
+        this.deleteData.phone
       ).then(res => {
         this.$message({
           message: '删除成功',
@@ -235,7 +255,6 @@ export default {
       let min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes()
       let sec = d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds()
       let times = d.getFullYear() + '-' + month + '-' + day + ' ' + hours + ':' + min + ':' + sec
-      console.log(times)
       return times
     },
     handleSelect (value) {

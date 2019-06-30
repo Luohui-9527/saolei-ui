@@ -10,7 +10,7 @@
       active-text-color="#ffd04b">
       <el-menu-item index="BasicInfo" style="margin-left: 350px">信息数据管理</el-menu-item>
       <el-menu-item index="InfoRelease">成绩排名</el-menu-item>
-      <el-menu-item index="" style="font-size: 14px;margin-left: 650px">
+      <el-menu-item index="" style="font-size: 14px;margin-left: 500px">
         <el-dropdown>
            <span class="el-dropdown-link" style="color: white">
              Hi,{{userAccount}}<i class="el-icon-arrow-down el-icon--right" style="color: white"></i>
